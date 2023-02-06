@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# usage: ./generate_password.sh <password_length>
+
+password_length=$1
+
+# Check if password length is provided
+if [ -z "$password_length" ]; then
+  echo "Error: password length is not provided."
+  echo "Usage: ./generate_password.sh <password_length>"
+  exit 1
+fi
+
+if [ "$password_length" -lt 8 ]; then
+	echo "Error: Password too short, please give a higher number"
+	echo "Usage: ./generate_password.sh <password_length>"
+	exit 1
+fi
+
+# Generate a random password with specified length
+password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $password_length | head -n 1)
+
+# Print the generated password
+echo "Generated password: $password"
+
+# Save to a file
+
+echo "Save password to a file?"
+read user_answer
+
+if [ "$user_answer" == "yes" ] || [ "$user_answer" == "y" ]; then
+  # Prompt the user for a file name
+  echo "Enter a file name:"
+  read file_name
+
+  # Save the password to the file
+  echo "$password" > "$file_name"
+
+  # Confirm the file has been saved
+  echo "Password saved successfully as $file_name"
+else
+  # Inform the user their password was not saved
+  echo "Password not saved."
+fi
